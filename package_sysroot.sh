@@ -21,8 +21,13 @@ for target in "${targets[@]}"; do
 	source "${current_source_directory}/${target}.sh"
 	
 	declare tarball="${current_source_directory}/${target}.tar.xz"
+	declare directories='./usr ./lib'
+	
+	if [ -d "${sysroot}/lib64" ]; then
+		directories+=' ./lib64'
+	fi
 	
 	echo "- Packaging sysroot from '${sysroot}' to '${tarball}'"
 	
-	tar --directory="${sysroot}" --create --file=- './usr' |  xz --quiet --threads=0 --compress -9 > "${tarball}"
+	tar --directory="${sysroot}" --create --file=- ${directories} |  xz --quiet --threads=0 --compress -9 > "${tarball}"
 done
